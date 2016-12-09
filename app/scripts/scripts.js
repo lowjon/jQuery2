@@ -1,9 +1,3 @@
-$(document).ready(function(){
-  // localStorage.clear();
-$('#newTaskForm').hide();
-
-console.log(localStorage);
-
 if(localStorage && localStorage.getItem('listo')){
   var listo = JSON.parse(localStorage.getItem('listo'));
   localStorage.clear();
@@ -12,34 +6,75 @@ if(localStorage && localStorage.getItem('listo')){
     localStorage.clear();
 };
 
+
+$(document).ready(function(){
+  // localStorage.clear();
+$('#newTaskForm').hide();
+
+console.log(localStorage);
+
+
+
 console.log(listo);
 
 var Task = function(task){
   this.task = task;
   this.id = 'new';
 };
-
+// You're going to need to fix this function in order to get
+// the info stored on the array loaded into the HTML
 var reloadTheStuff = function(listo){
-  if (listo){
     for (var i = 0; i < listo.length; i++) {
-      listo[i].loadStuff();
+      if(listo[i].id === 'new'){
+        $('#newList').append(
+          '<a href= "#finish" class="" id= "item">'+
+          '<li class="list-group-item">'+
+          '<h3>' + listo[i].task +'</h3>'+
+          '<span class="arrow pull-right">'+
+          '<i class="glyphicon glyphicon-arrow-right">' +
+          '</span>'+
+          '</li>' +
+          '</a>'
+        );
+      } else if (listo[i].id === 'inProgress'){
+        $('#currentList').append(
+          '<a href= "#finish" class="" id= "inProgress">'+
+          '<li class="list-group-item">'+
+          '<h3>' + listo[i].task +'</h3>'+
+          '<span class="arrow pull-right">'+
+          '<i class="glyphicon glyphicon-arrow-right">' +
+          '</span>'+
+          '</li>' +
+          '</a>'
+        );
+      } else if (listo[i].id === 'archived'){
+        $('#archivedList').append(
+          '<a href= "#finish" class="" id= "archived">'+
+          '<li class="list-group-item">'+
+          '<h3>' + listo[i].task +'</h3>'+
+          '<span class="arrow pull-right">'+
+          '<i class="glyphicon glyphicon-arrow-right">' +
+          '</span>'+
+          // '</li>' +
+          '</a>'
+        );
+      }
+
     }
-  }
 };
-
-var loadStuff = function(){
-  $('#newList').append(
-    '<a href= "#finish" class="" id= "item">'+
-    '<li class="list-group-item">'+
-    '<h3>' + task.task +'</h3>'+
-    '<span class="arrow pull-right">'+
-    '<i class="glyphicon glyphicon-arrow-right">' +
-    '</span>'+
-    '</li>' +
-    '</a>'
-  );
-
-};
+// var loadStuff = function(task){
+//   $('#newList').append(
+//     '<a href= "#finish" class="" id= "item">'+
+//     '<li class="list-group-item">'+
+//     '<h3>' + this.task +'</h3>'+
+//     '<span class="arrow pull-right">'+
+//     '<i class="glyphicon glyphicon-arrow-right">' +
+//     '</span>'+
+//     '</li>' +
+//     '</a>'
+//   );
+//
+// };
 
 var addTask = function (task) {
   if (task){
@@ -81,13 +116,15 @@ var advanceTask = function (task) {
 };
 
 
-$(window).load(listo, reloadTheStuff());
-
+// $(window).load(reloadTheStuff(listo));
+reloadTheStuff(listo);
+console.log(listo);
 
 $('#saveNewItem').on('click', function(e){
   e.preventDefault();
   var task = $('#newItemInput').val().trim();
   addTask(task);
+  // reloadTheStuff(listo);
 });
 
 $('#add-todo').on('click', function () {
